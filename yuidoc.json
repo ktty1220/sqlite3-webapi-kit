@@ -1,0 +1,10 @@
+{
+  "name": "SQLite3 WebAPI Kit",
+  "description": "SQLite3データベースをロードし、httpでデータをやり取りするAPIサーバーキット。",
+  "version": "0.1.0",
+  "url": "https://github.com/ktty1220/sqlite3-webapi-kit",
+  "options" : {
+    "outdir": "./doc",
+    "exclude": "index.js,example.js"
+  }
+}

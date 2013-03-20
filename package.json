@@ -1,0 +1,36 @@
+{
+  "name": "sqlite3-webapi-kit",
+  "version": "0.1.0",
+  "description": "SQLite3 WebAPI server kit for Node.js",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "vows --spec test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ktty1220/sqlite3-webapi-kit.git"
+  },
+  "dependencies": {
+    "async": ">=0.2.0",
+    "sqlite3": ">=2.1.1"
+  },
+  "engines": {
+    "node": ">=0.6.0"
+  },
+  "keywords": [
+    "sqlite",
+    "sqlite3",
+    "webapi",
+    "server",
+    "http"
+  ],
+  "author": {
+    "name": "ktty1220",
+    "email": "ktty1220@gmail.com"
+  },
+  "license": "MIT",
+  "readmeFilename": "README.md"
+}
