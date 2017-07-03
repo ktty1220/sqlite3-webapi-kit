@@ -1,21 +1,24 @@
 {
   "name": "sqlite3-webapi-kit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "SQLite3 WebAPI server kit for Node.js",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "vows --spec test/*.js"
+    "build": "coffee -bc lib/*.coffee test/*.coffee",
+    "test": "vows --spec test/*.js",
+    "posttest": "rm test.db3",
+    "doc": "yuidoc -c yuidoc.json ."
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/ktty1220/sqlite3-webapi-kit.git"
   },
   "dependencies": {
-    "async": ">=0.2.0",
-    "sqlite3": ">=2.1.1"
+    "async": "^2.5.0",
+    "sqlite3": "^3.1.8"
   },
   "engines": {
     "node": ">=0.6.0"
@@ -32,5 +35,10 @@
     "email": "ktty1220@gmail.com"
   },
   "license": "MIT",
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "devDependencies": {
+    "coffee-script": "^1.12.6",
+    "vows": "^0.9.0-rc1",
+    "yuidocjs": "^0.10.2"
+  }
 }

@@ -417,4 +417,7 @@ vows.describe('http server test')
     'メソッドが空になっている': (topic) =>
       assert.isEmpty topic
 
+.afterSuite () ->
+  sqlited.shutdown () => this.done()
+
 .export module

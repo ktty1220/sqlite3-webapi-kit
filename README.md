@@ -10,36 +10,46 @@ sqlite3-webapi-kitは、SQLite3のDBファイルをロードしてhttp通信で�
 
 sqlite3-webapi-kitをロードして、SQLite3形式のDBファイルを開き、ポート4983で待ち受けを行います。
 
-    var sqlited = require('sqlite3-webapi-kit');
-    sqlited.open('/path/to/hoge.db3', function (err) {
-      sqlite3.listen(4983, function () {
-        console.log('server start');
-      });
-    });
+```js
+var sqlited = require('sqlite3-webapi-kit');
+sqlited.open('/path/to/hoge.db3', function (err) {
+  sqlited.listen(4983, function () {
+    console.info('server start');
+  });
+});
+```
 
 localhost:4983にアクセスし、userテーブルのレコードを取得します(デフォルト実装WebAPI:`/select`にアクセス)。
 
-    $ curl http://localhost:4983/select?table=user
+```sh
+$ curl http://localhost:4983/select?table=user
+```
 
 取得したレコードは以下のようなJSON形式で返ります。
 
-    {
-      "result": [
-        { "id": 1, "name": "taro", "sex": "male", "age": 30 },
-        { "id": 2, "name": "jiro", "sex": "male", "age": 25 },
-        { "id": 3, "name": "saburo", "sex": "male", "age": 20 }
-      ]
-    }
+```json
+{
+  "result": [
+    { "id": 1, "name": "taro", "sex": "male", "age": 30 },
+    { "id": 2, "name": "jiro", "sex": "male", "age": 25 },
+    { "id": 3, "name": "saburo", "sex": "male", "age": 20 }
+  ]
+}
+```
 
 ## インストール
 
-    npm install sqlite3-webapi-kit
+```sh
+npm install sqlite3-webapi-kit
+```
 
 ## 使用方法
 
 requireでsqlite3-webapi-kitをロードします。ロードした変数を使用してDBファイルを読み込んだり、WebAPIメソッドを追加・削除したりして準備を行った後、サーバーを稼動させます。
 
-    sqlited = require('sqlite3-webapi-kit');
+```js
+var sqlited = require('sqlite3-webapi-kit');
+```
 
 ### メソッド
 
@@ -63,12 +73,14 @@ DBファイルを開きます。
 
 sqlite3-webapi-kitでは1DBファイルしか開けません。複数のDBファイルを開いてサーバー管理したい場合は`initSQL`で他のDBファイルをattachする等の方法を使用すれば実現できます。
 
-    sqlited.open('/path/to/hoge.db3', [
-      "attach '/path/to/fuga.db3' as fuga",
-      "attach '/path/to/henyo.db3' as henyo"
-    ], callback (err) {
-      ...
-    });
+```js
+sqlited.open('/path/to/hoge.db3', [
+  "attach '/path/to/fuga.db3' as fuga",
+  "attach '/path/to/henyo.db3' as henyo"
+], callback (err) {
+  ...
+});
+```
 
 #### close(callback)
 
@@ -98,15 +110,19 @@ openメソッドで開いたDBファイルを閉じます。メモリ上にデ�
 
     配列を使用する例
 
-        sqlited.get('SELECT * FROM user WHERE age > ? AND sex = ?', [ 20, 'male' ], function (err, result) {
-          ...
-        });
+    ```js
+    sqlited.get('SELECT * FROM user WHERE age > ? AND sex = ?', [ 20, 'male' ], function (err, result) {
+      ...
+    });
+    ```
 
     連想配列を使用する例
 
-        sqlited.get('SELECT * FROM user WHERE age > $age AND sex = $sex', { $age: 20, $sex: 'male' }, function (err, result) {
-          ...
-        });
+    ```js
+    sqlited.get('SELECT * FROM user WHERE age > $age AND sex = $sex', { $age: 20, $sex: 'male' }, function (err, result) {
+      ...
+    });
+    ```
 
 * callback
 
@@ -182,12 +198,14 @@ openメソッドで開いたDBファイルを閉じます。メモリ上にデ�
 
     __何かしらの処理を行った後に必ず`callback(エラー情報、処理結果)`を呼び出さなければいけません。__
 
-        function (param, callback) {
-          ・
-          ・
-          ・
-          return callback(err, result);
-        });
+    ```js
+    function (param, callback) {
+      ・
+      ・
+      ・
+      return callback(err, result);
+    });
+    ```
 
     エラー情報は、エラーメッセージ文字列でもnew Errorで作成したエラーオブジェクトでも構いません。エラーがなければ`undefined`を指定します。
 
@@ -225,12 +243,14 @@ openメソッドで開いたDBファイルを閉じます。メモリ上にデ�
 
     この関数でfalseを返すとリクエストパスに対する処理は行わず、アクセス元に対して403エラーを返します。
 
-    __リクエストを許可する場合は必ずtrueを指定してください。__
+    __リクエストを許可する場合は必ずtrueを返すようにしてください。__
 
-        sqlited.setHook(function (remoteAddress, request) {
-          // ローカルネットワークのみ許可
-          return /^(192\.168\.|127\.0\.0\.1)/.test(remoteAddress);
-        });
+    ```js
+    sqlited.setHook(function (remoteAddress, request) {
+      // ローカルネットワークのみ許可
+      return /^(192\.168\.|127\.0\.0\.1)/.test(remoteAddress);
+    });
+    ```
 
 #### listen([port, ]callback)
 
@@ -272,7 +292,9 @@ __デフォルトで用意されているWebAPIはテーブルの削除など危
 
 ##### サンプル
 
-    http://localhost:4983/query?sql=select%20name%20from%20user
+```sh
+http://localhost:4983/query?sql=select%20name%20from%20user
+```
 
 #### /select
 
@@ -306,7 +328,9 @@ SELECT文を実行し、条件に該当するレコードを取得します。
 
 ##### サンプル
 
-    http://localhost:4983/select?table=user&fields=rowid,name,age&limit=10&sort=age%20desc
+```sh
+http://localhost:4983/select?table=user&fields=rowid,name,age&limit=10&sort=age%20desc
+```
 
 #### /update
 
@@ -328,7 +352,9 @@ UPDATE文を実行し、処理結果を取得します。
 
 ##### サンプル
 
-    http://localhost:4983/update?table=user&set=name=%27taro%27,age=20&conditions=flag%20is%20null
+```sh
+http://localhost:4983/update?table=user&set=name=%27taro%27,age=20&conditions=flag%20is%20null
+```
 
 #### /insert
 
@@ -350,7 +376,9 @@ INSERT文を実行し、処理結果を取得します。
 
 ##### サンプル
 
-    http://localhost:4983/insert?table=user&fields=name,age&values=%27hanako%27,30
+```sh
+http://localhost:4983/insert?table=user&fields=name,age&values=%27hanako%27,30
+```
 
 #### /delete
 
@@ -368,7 +396,9 @@ DELETE文を実行し、処理結果を取得します。
 
 ##### サンプル
 
-    http://localhost:4983/delete?table=user&conditions=age<10
+```sh
+http://localhost:4983/delete?table=user&conditions=age<10
+```
 
 #### /create
 
@@ -386,7 +416,9 @@ CREATE TABLE文を実行し、処理結果を取得します。
 
 ##### サンプル
 
-    http://localhost:4983/create?table=user&fields=id%20integer%20primary%20key,name%20varchar(100)
+```sh
+http://localhost:4983/create?table=user&fields=id%20integer%20primary%20key,name%20varchar(100)
+```
 
 #### /drop
 
@@ -400,7 +432,9 @@ DROP TABLE文を実行し、処理結果を取得します。
 
 ##### サンプル
 
-    http://localhost:4983/drop?table=user
+```sh
+http://localhost:4983/drop?table=user
+```
 
 #### /schema
 
@@ -408,7 +442,9 @@ DROP TABLE文を実行し、処理結果を取得します。
 
 ##### サンプル
 
-    http://localhost:4983/schema
+```sh
+http://localhost:4983/schema
+```
 
 #### /reload
 
@@ -416,7 +452,9 @@ DBファイルを開き直します(使う意味はなさそうですが)。
 
 ##### サンプル
 
-    http://localhost:4983/reload
+```sh
+http://localhost:4983/reload
+```
 
 ### 外部からのアクセスに関しての仕様
 
@@ -426,6 +464,13 @@ DBファイルを開き直します(使う意味はなさそうですが)。
 * エラーが発生しなかった場合のステータスコードは200になります。
 
 ## Changelog
+
+### 0.1.1 (2017-07-03)
+
+* `setHook()`によるフック関数が未登録だとエラーになっていたのを修正(#1)
+* `coverage`モジュールがない状態でもテストを実行できるように修正(#1)
+* `example`追加
+* 依存ライブラリを最新バージョンに更新
 
 ### 0.1.0 (2013-03-20)
 
