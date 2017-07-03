@@ -5,6 +5,9 @@ async = require 'async'
 request = require 'request'
 try
   coverage = require 'coverage'
+catch e
+  coverage = { require: require }
+try
   sqlited = coverage.require "#{__dirname}/../lib/sqlite3-webapi-kit"
 catch e
   sqlited = coverage.require "../lib/sqlite3-webapi-kit"

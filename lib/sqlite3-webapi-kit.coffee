@@ -19,7 +19,7 @@ Sqlite3WebApiKit = (->
   _apiMethods = require './api-method'
   _db = null
   _onopen = null
-  _requestHook = null
+  _requestHook = -> true
   _server = null
 
   ###*

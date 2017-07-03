@@ -17,6 +17,14 @@ request = require('request');
 
 try {
   coverage = require('coverage');
+} catch (_error) {
+  e = _error;
+  coverage = {
+    require: require
+  };
+}
+
+try {
   sqlited = coverage.require("" + __dirname + "/../lib/sqlite3-webapi-kit");
 } catch (_error) {
   e = _error;
