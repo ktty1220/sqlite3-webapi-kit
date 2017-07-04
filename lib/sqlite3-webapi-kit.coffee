@@ -384,9 +384,13 @@ Sqlite3WebApiKit = (->
   * @return {Boolean} 成功/失敗
   ###
   _setHook = (func) ->
-    return false if func not instanceof Function
-    _requestHook = func
-    true
+    if func instanceof Function
+      _requestHook = func
+      return true
+    else if func is undefined
+      _requestHook = -> true
+      return true
+    false
 
   ###*
   * httpインターフェースを公開
