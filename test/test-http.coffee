@@ -98,18 +98,18 @@ vows.describe('http server test')
       assert.isTrue topic
 
 .addBatch
-  'httpリクエスト時のフック関数の登録を解除':
-    topic: -> sqlited.setHook undefined
-    '登録解除に成功': (topic) =>
-      assert.isTrue topic
-
-.addBatch
   '存在しないhttpメソッドにアクセス':
     topic: -> GET '/', @callback
     'httpレスポンスステータスコード: 404': (topic) =>
       assert.equal topic.statusCode, 404
     '1001エラーが発生する': (topic) =>
       assert.equal topic.error.errno, 1001
+
+.addBatch
+  'httpリクエスト時のフック関数の登録を解除':
+    topic: -> sqlited.setHook undefined
+    '登録解除に成功': (topic) =>
+      assert.isTrue topic
 
 .addBatch
   'デフォルトhttpメソッド: /query':

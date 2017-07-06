@@ -193,17 +193,6 @@ vows.describe('http server test').addBatch({
     })(this)
   }
 }).addBatch({
-  'httpリクエスト時のフック関数の登録を解除': {
-    topic: function() {
-      return sqlited.setHook(void 0);
-    },
-    '登録解除に成功': (function(_this) {
-      return function(topic) {
-        return assert.isTrue(topic);
-      };
-    })(this)
-  }
-}).addBatch({
   '存在しないhttpメソッドにアクセス': {
     topic: function() {
       return GET('/', this.callback);
@@ -216,6 +205,17 @@ vows.describe('http server test').addBatch({
     '1001エラーが発生する': (function(_this) {
       return function(topic) {
         return assert.equal(topic.error.errno, 1001);
+      };
+    })(this)
+  }
+}).addBatch({
+  'httpリクエスト時のフック関数の登録を解除': {
+    topic: function() {
+      return sqlited.setHook(void 0);
+    },
+    '登録解除に成功': (function(_this) {
+      return function(topic) {
+        return assert.isTrue(topic);
       };
     })(this)
   }
