@@ -467,12 +467,12 @@ http://localhost:4983/reload
 
 ### 0.1.2 (2017-07-03)
 
-* `setHook()`に`undefined`を渡すとフック関数の登録を解除できるように修正([#2](/../pull/2))
+* `setHook()`に`undefined`を渡すとフック関数の登録を解除できるように修正([#2](https://github.com/ktty1220/sqlite3-webapi-kit/pull/2))
 
 ### 0.1.1 (2017-07-03)
 
-* `setHook()`によるフック関数が未登録だとエラーになっていたのを修正([#1](/../pull/1))
-* `coverage`モジュールがない状態でもテストを実行できるように修正([#1](/../pull/1))
+* `setHook()`によるフック関数が未登録だとエラーになっていたのを修正([#1](https://github.com/ktty1220/sqlite3-webapi-kit/pull/1))
+* `coverage`モジュールがない状態でもテストを実行できるように修正([#1](https://github.com/ktty1220/sqlite3-webapi-kit/pull/1))
 * 依存ライブラリを最新バージョンに更新
 
 ### 0.1.0 (2013-03-20)
