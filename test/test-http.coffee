@@ -106,6 +106,12 @@ vows.describe('http server test')
       assert.equal topic.error.errno, 1001
 
 .addBatch
+  'httpリクエスト時のフック関数の登録を解除':
+    topic: -> sqlited.setHook undefined
+    '登録解除に成功': (topic) =>
+      assert.isTrue topic
+
+.addBatch
   'デフォルトhttpメソッド: /query':
     topic: -> GET '/query', { sql: 'select * from user' }, @callback
     'httpレスポンスステータスコード: 200': (topic) =>

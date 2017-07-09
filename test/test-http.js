@@ -209,6 +209,17 @@ vows.describe('http server test').addBatch({
     })(this)
   }
 }).addBatch({
+  'httpリクエスト時のフック関数の登録を解除': {
+    topic: function() {
+      return sqlited.setHook(void 0);
+    },
+    '登録解除に成功': (function(_this) {
+      return function(topic) {
+        return assert.isTrue(topic);
+      };
+    })(this)
+  }
+}).addBatch({
   'デフォルトhttpメソッド: /query': {
     topic: function() {
       return GET('/query', {
