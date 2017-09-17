@@ -453,6 +453,17 @@ Sqlite3WebApiKit = (->
     _server = null
     callback?()
 
+  ###*
+  * テストする変数を参照
+  *
+  * @public
+  * @property variables {Object}
+  ###
+  _variables = {}
+  Object.defineProperties _variables,
+    _db:
+      get: -> _db
+
   # 公開メソッドをエクスポート
   dbname: _dbname
   open: _open
@@ -468,6 +479,7 @@ Sqlite3WebApiKit = (->
   setHook: _setHook
   listen: _listen
   shutdown: _shutdown
+  variables: _variables
 
 )()
 
