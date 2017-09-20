@@ -60,7 +60,7 @@ vows.describe('core test').addBatch({
     topic: function() {
       sqlited.close((function(_this) {
         return function(err) {
-          return _this.callback(err, sqlited._db);
+          return _this.callback(err, sqlited.variables._db);
         };
       })(this));
     },
@@ -75,7 +75,7 @@ vows.describe('core test').addBatch({
     topic: function() {
       sqlited.close((function(_this) {
         return function(err) {
-          return _this.callback(err, sqlited._db);
+          return _this.callback(err, sqlited.variables._db);
         };
       })(this));
     },

@@ -32,7 +32,7 @@ vows.describe('core test')
 .addBatch
   'DBクローズ':
     topic: ->
-      sqlited.close (err) => @callback err, sqlited._db
+      sqlited.close (err) => @callback err, sqlited.variables._db
       return
     '_dbがnullになっている': (topic) =>
       assert.equal topic, null
@@ -40,7 +40,7 @@ vows.describe('core test')
 .addBatch
   '2重クローズ(何もしない)':
     topic: ->
-      sqlited.close (err) => @callback err, sqlited._db
+      sqlited.close (err) => @callback err, sqlited.variables._db
       return
     '_dbがnullになっている': (topic) =>
       assert.equal topic, null
