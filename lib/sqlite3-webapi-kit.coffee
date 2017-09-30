@@ -21,6 +21,7 @@ Sqlite3WebApiKit = (->
   _onopen = null
   _requestHook = -> true
   _server = null
+  _openQueue = []
 
   ###*
   * 開いているDB名(ファイルパス)を取得
@@ -38,25 +39,33 @@ Sqlite3WebApiKit = (->
   * @method open
   * @param dbname {String} DBファイルのパス(未指定はメモリデータベースの指定と同じ)
   * @param init {mixed} DBを開いた時に実行するSQL(文字列 or 配列)
+  * @param timeout {Number} DBが閉じられている場合の待機時間(ミリ秒)
   * @param callback {Function} 引数無し
   ###
-  _open = (dbname, init, callback) ->
+  _open = (dbname, init, timeout, callback) ->
+    if timeout instanceof Function
+      callback = timeout
+      timeout = 0;
     if init instanceof Function
       callback = init
       init = undefined
+      timeout = 0
     if dbname instanceof Function
       callback = dbname
       dbname = undefined
       init = undefined
+      timeout = 0
     dbname ?= ':memory:'
 
-    return callback _error(1007) if _db?
-    _db = new sqlite3.Database dbname
-    if init
-      _onopen = init
-      _postMulti _onopen, callback
-    else
-      callback()
+    _waitClose timeout, (result) ->
+      return callback _error(1007) unless result
+      _db = new sqlite3.Database dbname
+      if init
+        _onopen = init
+        _postMulti _onopen, callback
+      else
+        callback()
+    return
 
   ###*
   * DBを閉じる
@@ -72,6 +81,37 @@ Sqlite3WebApiKit = (->
       _db = null
       _onopen = null
       callback?()
+
+  ###*
+  * DBが閉じられるのを待機
+  *
+  * @private
+  * @method _waitClose
+  * @param timeout {Number} 待機時間(ミリ秒)
+  * @param callback {Function} (待機時間内に閉じられた/待機時間内に閉じられなかった)
+  ###
+  _waitClose = (timeout, callback) ->
+    # 自分の番を識別するためcallbackを待ち行列に追加
+    if _openQueue.indexOf(callback) is -1
+      _openQueue.push(callback)
+
+    # DBが閉じられ かつ 待ち行列の先頭の場合
+    if !_db and _openQueue[0] is callback
+      _openQueue.shift()
+      callback true
+    # 待機時間が経過した場合
+    else if timeout <= 0
+      _openQueue.splice(_openQueue.indexOf(callback), 1)
+      callback false
+    else
+      # 最大100ミリ秒待機する
+      interval = Math.min(100, timeout) or 100
+      setTimeout () ->
+        # 待機した時間だけ減らして再実行
+        _waitClose timeout - interval, callback
+        return
+      , interval
+    return
 
   # webapiで発生したエラー番号とエラーメッセージの組み合わせ
   _errMessage =
@@ -463,6 +503,8 @@ Sqlite3WebApiKit = (->
   Object.defineProperties _variables,
     _db:
       get: -> _db
+    _openQueue:
+      get: -> _openQueue
 
   # 公開メソッドをエクスポート
   dbname: _dbname
